@@ -1,0 +1,17 @@
+.game {
+    height: 85%;
+    display: flex;
+}
+
+.board {
+    height: 100%;
+    width: 80%;
+    background-image: url('../../images/grass.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.score {
+    height: 100%;
+    width: 20%;
+}

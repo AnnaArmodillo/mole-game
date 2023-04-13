@@ -1,0 +1,20 @@
+.footer {
+    background-color: var(--background-color);
+    text-align: left;
+    padding: 8px 20px;
+}
+
+.text {
+    font-size: 12px;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+}
+
+.logoWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
