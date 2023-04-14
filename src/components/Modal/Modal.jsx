@@ -31,15 +31,9 @@ function ModalInner({ closeModalHandler, children }) {
   );
 }
 export function Modal({ closeModalHandler, isModalOpen, children }) {
-  function closeModalByClickWrapper(event) {
-    if (event.target === event.currentTarget) {
-      closeModalHandler();
-    }
-  }
   if (!isModalOpen) return null;
   return createPortal(
     <div
-      onMouseDown={closeModalByClickWrapper}
       className={styles.modalOuter}
     >
       <ModalInner closeModalHandler={closeModalHandler}>{children}</ModalInner>

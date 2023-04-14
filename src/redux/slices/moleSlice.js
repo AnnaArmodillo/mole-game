@@ -8,7 +8,6 @@ const moleSlice = createSlice({
   reducers: {
     setMole() {
       return {
-        hidden: false,
         row: getRandomNumber(),
         column: getRandomNumber(),
       };

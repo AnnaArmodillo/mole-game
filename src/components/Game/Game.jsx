@@ -5,6 +5,7 @@ import { Mole } from '../Mole/Mole';
 import {
   countPoints, finishGame, getGameSelector, startGame,
 } from '../../redux/slices/gameSlice';
+// eslint-disable-next-line no-unused-vars
 import { clearMole, setMole } from '../../redux/slices/moleSlice';
 import { ProgressBar } from '../ProgressBar/ProgressBas';
 import { MOLE_TIME } from '../constants';
@@ -39,8 +40,8 @@ export function Game() {
       }, 100);
     } else if (started) {
       dispatch(finishGame());
-      dispatch(clearMole());
-      setIsModalOpen(true);
+      // dispatch(clearMole());
+      // setIsModalOpen(true);
     }
   }, [started, timeLeft, setTimeLeft, setIsModalOpen]);
 
