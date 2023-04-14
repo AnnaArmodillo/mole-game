@@ -1,0 +1,12 @@
+  .button {
+    background-color: var(--button-background-color);
+    font-size: 32px;
+    width: fit-content;
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px solid var(--button-border-color);
+    cursor: pointer;
+    &:hover {
+      box-shadow: 8px 13px 15px 2px var(--button-shadow-color);
+    }
+  }

@@ -1,22 +1,15 @@
   .help {
-    padding: 20px;
+    padding: 8px 20px;
     display: flex;
     flex-direction: column;
     height: 100%;
   }
-  
-  .link {
-    font-size: 20px;
-    text-decoration: none;
-    transition: all 0.5s ease;
-    color: var(--text-color);
-    font-weight: 500;
-    &:hover {
-      color: var(--button-border-color);
-    }
-  }
+
 
   .help p {
     text-align: left;
     margin: 8px;
+    &:last-of-type {
+      margin-bottom: 24px;
+    }
   }

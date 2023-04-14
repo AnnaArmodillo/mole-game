@@ -1,12 +1,13 @@
 import styles from './help.module.scss';
+import { ButtonPlay } from '../ButtonPlay/ButtonPlay';
 
 export function Help() {
   return (
     <div className={styles.help}>
-      <h2>Как играть?</h2>
+      <h3>Как играть?</h3>
       <p>Справа от игрового поля есть кнопка &quot;Старт&quot;.</p>
       <p>
-        После нажатия на эту кнопку на игровом поле появится первый крот и
+        После нажатия на эту кнопку на игровом поле появится первый крот, и
         начнется обратный отсчет.
       </p>
       <p>
@@ -20,6 +21,7 @@ export function Help() {
         заново.
       </p>
       <p>Когда время истечет, игра будет закончена. Удачи!</p>
+      <ButtonPlay />
     </div>
   );
 }
