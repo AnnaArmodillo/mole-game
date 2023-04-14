@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import styles from './game.module.scss';
 import { Mole } from '../Mole/Mole';
 import {
-  countPoints, finishGame, getGameSelector, startGame,
+  countPoints, finishGame, getGameSelector, setLevelUp, setTotalScore, startGame, startNewGame,
 } from '../../redux/slices/gameSlice';
 // eslint-disable-next-line no-unused-vars
 import { clearMole, setMole } from '../../redux/slices/moleSlice';
@@ -13,38 +13,58 @@ import { getPoints } from '../helper';
 import { Modal } from '../Modal/Modal';
 
 export function Game() {
-  const { started, score } = useSelector(getGameSelector);
+  const game = useSelector(getGameSelector);
   const [timeLeft, setTimeLeft] = useState(MOLE_TIME);
   const [timeStart, setTimeStart] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalFailOpen, setIsModalFailOpen] = useState(false);
+  const [isModalSuccessOpen, setIsModalSuccessOpen] = useState(false);
   const dispatch = useDispatch();
-  function startGameHandler() {
+  function startLevel() {
     dispatch(startGame());
     dispatch(setMole());
     setTimeStart(Date.now());
     setTimeLeft(MOLE_TIME);
   }
+  function startNewGameHandler() {
+    dispatch(startNewGame());
+    setIsModalFailOpen(false);
+    startLevel();
+  }
+  function startGameHandler() {
+    startLevel();
+  }
   function clickMoleHandler() {
     dispatch(setMole());
-    dispatch(countPoints(+getPoints(timeLeft) + score));
+    dispatch(countPoints(+getPoints(timeLeft) + game.score));
+    dispatch(setTotalScore(+getPoints(timeLeft) + game.totalScore));
     setTimeLeft(MOLE_TIME);
     setTimeStart(Date.now());
   }
-  function closeModalHandler() {
-    setIsModalOpen(false);
+  function closeModalFailHandler() {
+    setIsModalFailOpen(false);
+  }
+  function closeModalSuccessHandler() {
+    setIsModalSuccessOpen(false);
   }
   useEffect(() => {
-    if (started && timeLeft >= 0) {
+    if (game.started && timeLeft >= 0) {
       setTimeout(() => {
         setTimeLeft(timeStart + MOLE_TIME - Date.now());
       }, 100);
-    } else if (started) {
+    } else if (game.started) {
       dispatch(finishGame());
-      // dispatch(clearMole());
-      // setIsModalOpen(true);
+      dispatch(clearMole());
+      dispatch(setTotalScore(game.totalScore + game.score));
+      setIsModalFailOpen(true);
     }
-  }, [started, timeLeft, setTimeLeft, setIsModalOpen]);
-
+  }, [game.started, timeLeft, setTimeLeft, setIsModalFailOpen]);
+  useEffect(() => {
+    if (game.score >= game.goal) {
+      dispatch(setLevelUp(game.level + 1));
+      dispatch(finishGame());
+      setIsModalSuccessOpen(true);
+    }
+  }, [game.score]);
   return (
     <div className={styles.game}>
       <div className={styles.board}>
@@ -53,25 +73,71 @@ export function Game() {
         </div>
       </div>
       <div className={styles.score}>
-        {!started && (
-          <button type="button" onClick={startGameHandler} className={styles.button}>Старт</button>
+        {!game.started && (
+          <button
+            type="button"
+            onClick={startNewGameHandler}
+            className={styles.button}
+          >
+            Начать новую игру
+          </button>
         )}
-        {started
+        {game.started
           && <ProgressBar timeLeft={timeLeft} />}
-        <div className={styles.scoreWrapper}>
+        <div className={styles.wrapper}>
           <p>Счет</p>
-          <p>{score}</p>
+          <p>{game.score}</p>
+        </div>
+        <div className={styles.wrapper}>
+          <p>Цель</p>
+          <p>{game.goal}</p>
+        </div>
+        <div className={styles.wrapper}>
+          <p>Общий счет</p>
+          <p>{game.totalScore}</p>
+        </div>
+        <div className={styles.wrapper}>
+          <p>Уровень</p>
+          <p>{game.level}</p>
         </div>
       </div>
-      <Modal isModalOpen={isModalOpen} closeModalHandler={closeModalHandler}>
+      <Modal isModalOpen={isModalFailOpen} closeModalHandler={closeModalFailHandler}>
         <p>О нет, кроты победили!</p>
         <p>
           Твой счет:
           {' '}
-          {score}
-          {' '}
-          очков
+          {game.totalScore}
         </p>
+        <button
+          type="button"
+          onClick={startNewGameHandler}
+          className={styles.button}
+        >
+          Начать игру заново
+        </button>
+      </Modal>
+      <Modal isModalOpen={isModalSuccessOpen} closeModalHandler={closeModalSuccessHandler}>
+        <p>Ты победил!</p>
+        <p>
+          Твой счет:
+          {' '}
+          {game.totalScore}
+        </p>
+        {(game.level <= 10) && (
+          <>
+            <p>Но еще не все кроты побеждены</p>
+            <button
+              type="button"
+              onClick={() => {
+                startGameHandler();
+                setIsModalSuccessOpen(false);
+              }}
+              className={styles.button}
+            >
+              Следующий уровень
+            </button>
+          </>
+        )}
       </Modal>
     </div>
   );

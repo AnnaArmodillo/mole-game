@@ -5,7 +5,6 @@ import { getMoleSelector } from '../../redux/slices/moleSlice';
 
 export function Mole({ clickMoleHandler }) {
   const mole = useSelector(getMoleSelector);
-  console.log(mole);
   if (mole.column === '' || mole.row === '') {
     return null;
   }

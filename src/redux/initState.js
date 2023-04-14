@@ -6,6 +6,9 @@ export const initState = {
   game: {
     started: false,
     score: 0,
+    level: 1,
+    totalScore: 0,
+    goal: 200,
   },
 };
 

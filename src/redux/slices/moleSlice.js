@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { initState } from '../initState';
 import { getRandomNumber } from '../helper';
+import { MOLE_SIZE } from '../constants';
 
 const moleSlice = createSlice({
   name: 'mole',
@@ -8,8 +9,9 @@ const moleSlice = createSlice({
   reducers: {
     setMole() {
       return {
-        row: getRandomNumber(),
-        column: getRandomNumber(),
+        row: getRandomNumber(1, 9),
+        column: getRandomNumber(1, 9),
+        size: MOLE_SIZE[getRandomNumber(0, 3)],
       };
     },
     clearMole() {
