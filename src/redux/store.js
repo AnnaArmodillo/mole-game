@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { getInitState } from './initState';
-import { molesReducer } from './slices/molesSlice';
+import { moleReducer } from './slices/moleSlice';
+import { gameReducer } from './slices/gameSlice';
 
 export const store = configureStore({
   reducer: {
-    moles: molesReducer,
+    mole: moleReducer,
+    game: gameReducer,
   },
   preloadedState: getInitState(),
 });

@@ -1,0 +1,18 @@
+.container {
+    height: 20px;
+    width: 90%;
+    background-color: var(--text-color);
+    border-radius: 20px;
+    border: 2px solid var(--button-border-color);
+  }
+
+.filler {
+    height: 100%;
+    background-color: var(--button-background-color);
+    border-radius: inherit;
+    text-align: left;
+  }
+
+  .hidden {
+    display: none;
+  }

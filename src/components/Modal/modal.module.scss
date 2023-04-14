@@ -1,0 +1,45 @@
+.modalOuter {
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color:var(--button-shadow-color);
+    backdrop-filter: blur(2px);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalInner {
+    max-width: 50%;
+    max-height: 50%;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    position: relative;
+    color: var(--text-color);
+    font-size: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .buttonClose {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    font-size: 20px;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--button-background-color);
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 4px 8px 20px 0 var(--button-shadow-color);
+    }
+  }

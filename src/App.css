@@ -8,11 +8,14 @@
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
+  user-select: none;
 }
 
 :root {
   --background-color: rgb(188, 245, 226);
-  --text-color: rgb(25, 25, 207);
+  --text-body-color: rgb(25, 25, 207);
   --button-background-color: rgb(192, 39, 197);
   --button-border-color: rgb(154, 36, 158);
+  --button-shadow-color: rgba(99, 38, 128, 0.28);
+  --text-color: black;
 }

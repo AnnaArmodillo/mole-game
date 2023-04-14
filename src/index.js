@@ -6,6 +6,7 @@ import { store } from './redux/store';
 import App from './App';
 import { Main } from './components/Main/Main';
 import { Game } from './components/Game/Game';
+import { Help } from './components/Help/Help';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: 'game',
         element: <Game />,
+      },
+      {
+        path: 'help',
+        element: <Help />,
       },
     ],
   },

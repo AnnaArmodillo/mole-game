@@ -1,5 +1,12 @@
 export const initState = {
-  moles: [],
+  mole: {
+    row: '',
+    column: '',
+  },
+  game: {
+    started: false,
+    score: 0,
+  },
 };
 
 export const getInitState = () => initState;
