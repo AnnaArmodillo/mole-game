@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "./static/css/main.a14df25e.css",
+    "main.js": "./static/js/main.0d8c387f.js",
+    "static/media/mole.png": "./static/media/mole.ba3ef3e2a54e34170ec9.png",
+    "static/media/logo.png": "./static/media/logo.08cf429a9992edd1fd72.png",
+    "static/media/grass.jpg": "./static/media/grass.52eefa50af8105f8810e.jpg",
+    "index.html": "./index.html",
+    "main.a14df25e.css.map": "./static/css/main.a14df25e.css.map",
+    "main.0d8c387f.js.map": "./static/js/main.0d8c387f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a14df25e.css",
+    "static/js/main.0d8c387f.js"
+  ]
+}

@@ -8,23 +8,26 @@ import { Main } from './components/Main/Main';
 import { Game } from './components/Game/Game';
 import { Help } from './components/Help/Help';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    children: [
-      { index: true, element: <Main /> },
-      {
-        path: 'game',
-        element: <Game />,
-      },
-      {
-        path: 'help',
-        element: <Help />,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <App />,
+      children: [
+        { index: true, element: <Main /> },
+        {
+          path: 'game',
+          element: <Game />,
+        },
+        {
+          path: 'help',
+          element: <Help />,
+        },
+      ],
+    },
+  ],
+  { basename: '/mole-game' },
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
