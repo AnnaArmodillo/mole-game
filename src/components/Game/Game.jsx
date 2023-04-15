@@ -5,7 +5,7 @@ import { Mole } from '../Mole/Mole';
 import {
   countPoints, finishGame, getGameSelector, setLevelUp, setTotalScore, startGame, startNewGame,
 } from '../../redux/slices/gameSlice';
-import { clearMole, setMole } from '../../redux/slices/moleSlice';
+import { clearMole, getMoleSelector, setMole } from '../../redux/slices/moleSlice';
 import { ProgressBar } from '../ProgressBar/ProgressBas';
 import { MOLE_TIME } from '../constants';
 import { getPoints } from '../helper';
@@ -13,6 +13,8 @@ import { Modal } from '../Modal/Modal';
 
 export function Game() {
   const game = useSelector(getGameSelector);
+  const { lives } = useSelector(getMoleSelector);
+  const [knockCount, setKnockCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(MOLE_TIME);
   const [timeStart, setTimeStart] = useState('');
   const [isModalFailOpen, setIsModalFailOpen] = useState(false);
@@ -33,11 +35,7 @@ export function Game() {
     startLevel();
   }
   function clickMoleHandler() {
-    dispatch(setMole());
-    dispatch(countPoints(+getPoints(timeLeft) + game.score));
-    dispatch(setTotalScore(+getPoints(timeLeft) + game.totalScore));
-    setTimeLeft(MOLE_TIME);
-    setTimeStart(Date.now());
+    setKnockCount((prev) => prev + 1);
   }
   function closeModalFailHandler() {
     setIsModalFailOpen(false);
@@ -45,6 +43,16 @@ export function Game() {
   function closeModalSuccessHandler() {
     setIsModalSuccessOpen(false);
   }
+  useEffect(() => {
+    if (knockCount >= lives) {
+      dispatch(setMole());
+      dispatch(countPoints(+getPoints(timeLeft, lives) + game.score));
+      dispatch(setTotalScore(+getPoints(timeLeft, lives) + game.totalScore));
+      setTimeLeft(MOLE_TIME);
+      setTimeStart(Date.now());
+      setKnockCount(0);
+    }
+  }, [knockCount]);
   useEffect(() => {
     if (game.started && timeLeft >= 0) {
       setTimeout(() => {

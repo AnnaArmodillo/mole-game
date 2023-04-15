@@ -3,6 +3,7 @@ export const initState = {
     row: '',
     column: '',
     size: '',
+    lives: '',
   },
   game: {
     started: false,
