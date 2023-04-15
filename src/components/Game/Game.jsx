@@ -51,7 +51,7 @@ export function Game() {
     setIsModalSuccessOpen(false);
   }
   useEffect(() => {
-    if (knockCount >= lives) {
+    if (knockCount >= lives && game.started) {
       dispatch(setMole());
       dispatch(countPoints(+getPoints(timeLeft, lives) + game.score));
       dispatch(setTotalScore(+getPoints(timeLeft, lives) + game.totalScore));
