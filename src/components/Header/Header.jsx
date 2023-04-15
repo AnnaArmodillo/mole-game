@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './header.module.scss';
 import { getSoundSelector, setSound } from '../../redux/slices/soundSlice';
+import { getGameSelector } from '../../redux/slices/gameSlice';
 
 export function Header() {
   const isSoundOn = useSelector(getSoundSelector);
+  const { level, totalScore } = useSelector(getGameSelector);
   const dispatch = useDispatch();
   function soundHandler() {
     dispatch(setSound());
@@ -37,6 +39,18 @@ export function Header() {
       >
         КРОТОБОЙ
       </Link>
+      <div>
+        <div>
+          Уровень
+          {' '}
+          {level}
+        </div>
+        <div>
+          Общий счет
+          {' '}
+          {totalScore}
+        </div>
+      </div>
     </div>
   );
 }

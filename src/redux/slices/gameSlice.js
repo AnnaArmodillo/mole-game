@@ -39,6 +39,12 @@ const gameSlice = createSlice({
     decreaseTotalScore(state, action) {
       return { ...state, totalScore: action.payload };
     },
+    pauseGame(state) {
+      return { ...state, started: false };
+    },
+    resumeGame(state) {
+      return { ...state, started: true };
+    },
   },
 });
 
@@ -51,6 +57,7 @@ export const {
   startNewGame,
   setWeaponLevelUp,
   decreaseTotalScore,
+  pauseGame, resumeGame,
 } = gameSlice.actions;
 
 export const getGameSelector = (state) => state.game;

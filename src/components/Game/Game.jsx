@@ -9,6 +9,8 @@ import {
   decreaseTotalScore,
   finishGame,
   getGameSelector,
+  pauseGame,
+  resumeGame,
   setLevelUp,
   setTotalScore,
   setWeaponLevelUp,
@@ -38,10 +40,15 @@ export function Game() {
   const [timeStart, setTimeStart] = useState('');
   const [isModalFailOpen, setIsModalFailOpen] = useState(false);
   const [isModalSuccessOpen, setIsModalSuccessOpen] = useState(false);
+  const [isModalPauseOpen, setIsModalPauseOpen] = useState(false);
   const sounds = [glove, bucket, shovel];
   const weapon = WEAPONS[game.weapon];
   const [knock, { stop }] = useSound(sounds[game.weapon], { volume: sound ? 0.25 : 0 });
   const dispatch = useDispatch();
+  function pauseHandler() {
+    dispatch(pauseGame());
+    setIsModalPauseOpen(true);
+  }
   function startLevel() {
     dispatch(startGame());
     dispatch(setMole());
@@ -53,9 +60,6 @@ export function Game() {
     setIsModalFailOpen(false);
     startLevel();
   }
-  function startGameHandler() {
-    startLevel();
-  }
   function clickMoleHandler() {
     knock();
     setKnockCount((prev) => prev + game.weapon + 1);
@@ -64,7 +68,13 @@ export function Game() {
     setIsModalFailOpen(false);
   }
   function closeModalSuccessHandler() {
+    startLevel();
     setIsModalSuccessOpen(false);
+  }
+  function closeModalPauseHandler() {
+    dispatch(resumeGame());
+    setTimeStart(Date.now() + timeLeft - MOLE_TIME);
+    setIsModalPauseOpen(false);
   }
   function setWeaponLevelUpHandler() {
     dispatch(setWeaponLevelUp(game.weapon + 1));
@@ -96,7 +106,9 @@ export function Game() {
   useEffect(() => {
     if (game.score >= game.goal) {
       stop();
-      dispatch(setLevelUp(game.level + 1));
+      if (game.level < 10) {
+        dispatch(setLevelUp(game.level + 1));
+      }
       dispatch(finishGame());
       setIsModalSuccessOpen(true);
     }
@@ -127,14 +139,16 @@ export function Game() {
           <p>Цель</p>
           <p>{game.goal}</p>
         </div>
-        <div className={styles.wrapper}>
-          <p>Общий счет</p>
-          <p>{game.totalScore}</p>
-        </div>
-        <div className={styles.wrapper}>
-          <p>Уровень</p>
-          <p>{game.level}</p>
-        </div>
+        {game.started && (
+          <button
+            type="button"
+            className={styles.button}
+            onClick={pauseHandler}
+            title="Сделать паузу"
+          >
+            Пауза
+          </button>
+        )}
       </div>
       <Modal
         isModalOpen={isModalFailOpen}
@@ -169,10 +183,7 @@ export function Game() {
             <p>Но еще не все кроты повержены...</p>
             <button
               type="button"
-              onClick={() => {
-                startGameHandler();
-                setIsModalSuccessOpen(false);
-              }}
+              onClick={closeModalSuccessHandler}
               className={styles.button}
             >
               Следующий уровень
@@ -188,6 +199,21 @@ export function Game() {
             )}
           </>
         )}
+      </Modal>
+      <Modal
+        isModalOpen={isModalPauseOpen}
+        closeModalHandler={closeModalPauseHandler}
+      >
+        <p>
+          Перерыв! Нажми продолжить, когда немного отдохнешь
+        </p>
+        <button
+          type="button"
+          className={styles.button}
+          onClick={closeModalPauseHandler}
+        >
+          Продолжить
+        </button>
       </Modal>
     </div>
   );
