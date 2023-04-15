@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import useSound from 'use-sound';
 import styles from './game.module.scss';
 import { Mole } from '../Mole/Mole';
 import {
@@ -10,6 +11,9 @@ import { ProgressBar } from '../ProgressBar/ProgressBas';
 import { MOLE_TIME } from '../constants';
 import { getPoints } from '../helper';
 import { Modal } from '../Modal/Modal';
+import glove from '../../sounds/glove_hit.mp3';
+import bucket from '../../sounds/bucket_hit.mp3';
+import shovel from '../../sounds/shovel_hit.mp3';
 
 export function Game() {
   const game = useSelector(getGameSelector);
@@ -19,6 +23,8 @@ export function Game() {
   const [timeStart, setTimeStart] = useState('');
   const [isModalFailOpen, setIsModalFailOpen] = useState(false);
   const [isModalSuccessOpen, setIsModalSuccessOpen] = useState(false);
+  const sounds = [glove, bucket, shovel];
+  const [knock, { stop }] = useSound(sounds[game.weapon], { volume: 0.25 });
   const dispatch = useDispatch();
   function startLevel() {
     dispatch(startGame());
@@ -35,6 +41,7 @@ export function Game() {
     startLevel();
   }
   function clickMoleHandler() {
+    knock();
     setKnockCount((prev) => prev + 1);
   }
   function closeModalFailHandler() {
@@ -59,6 +66,7 @@ export function Game() {
         setTimeLeft(timeStart + MOLE_TIME - Date.now());
       }, 100);
     } else if (game.started) {
+      stop();
       dispatch(finishGame());
       dispatch(clearMole());
       dispatch(setTotalScore(game.totalScore + game.score));
@@ -67,6 +75,7 @@ export function Game() {
   }, [game.started, timeLeft, setTimeLeft, setIsModalFailOpen]);
   useEffect(() => {
     if (game.score >= game.goal) {
+      stop();
       dispatch(setLevelUp(game.level + 1));
       dispatch(finishGame());
       setIsModalSuccessOpen(true);

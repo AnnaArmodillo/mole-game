@@ -11,6 +11,7 @@ export const initState = {
     level: 1,
     totalScore: 0,
     goal: 200,
+    weapon: 0,
   },
 };
 
