@@ -27,9 +27,11 @@ import { Modal } from '../Modal/Modal';
 import glove from '../../sounds/glove_hit.mp3';
 import bucket from '../../sounds/bucket_hit.mp3';
 import shovel from '../../sounds/shovel_hit.mp3';
+import { getSoundSelector } from '../../redux/slices/soundSlice';
 
 export function Game() {
   const game = useSelector(getGameSelector);
+  const sound = useSelector(getSoundSelector);
   const { lives } = useSelector(getMoleSelector);
   const [knockCount, setKnockCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(MOLE_TIME);
@@ -38,7 +40,7 @@ export function Game() {
   const [isModalSuccessOpen, setIsModalSuccessOpen] = useState(false);
   const sounds = [glove, bucket, shovel];
   const weapon = WEAPONS[game.weapon];
-  const [knock, { stop }] = useSound(sounds[game.weapon], { volume: 0.25 });
+  const [knock, { stop }] = useSound(sounds[game.weapon], { volume: sound ? 0.25 : 0 });
   const dispatch = useDispatch();
   function startLevel() {
     dispatch(startGame());

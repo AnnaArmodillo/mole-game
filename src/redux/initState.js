@@ -14,6 +14,7 @@ export const initState = {
     weapon: 0,
     weaponPrice: 500,
   },
+  sound: false,
 };
 
 export const getInitState = () => initState;

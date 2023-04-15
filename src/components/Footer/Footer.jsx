@@ -12,6 +12,7 @@ export function Footer() {
         </p>
       </div>
       <p className={styles.text}>2023</p>
+      <p>За озвучку огромное спасибо Марии Денисовой!</p>
       <Link to="./help" className={styles.link} title="Не понятно, как играть? Тебе сюда!">
         Справка
       </Link>
