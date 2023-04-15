@@ -2,6 +2,7 @@ export const initState = {
   mole: {
     row: '',
     column: '',
+    size: '',
   },
   game: {
     started: false,

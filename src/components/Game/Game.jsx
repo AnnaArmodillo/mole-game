@@ -5,7 +5,6 @@ import { Mole } from '../Mole/Mole';
 import {
   countPoints, finishGame, getGameSelector, setLevelUp, setTotalScore, startGame, startNewGame,
 } from '../../redux/slices/gameSlice';
-// eslint-disable-next-line no-unused-vars
 import { clearMole, setMole } from '../../redux/slices/moleSlice';
 import { ProgressBar } from '../ProgressBar/ProgressBas';
 import { MOLE_TIME } from '../constants';
@@ -125,7 +124,7 @@ export function Game() {
         </p>
         {(game.level <= 10) && (
           <>
-            <p>Но еще не все кроты побеждены</p>
+            <p>Но еще не все кроты повержены...</p>
             <button
               type="button"
               onClick={() => {

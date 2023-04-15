@@ -14,7 +14,7 @@ export function Mole({ clickMoleHandler }) {
       className={styles.mole}
       style={{ gridColumn: `${mole.column}`, gridRow: `${mole.row}` }}
     >
-      <img src={moleImage} alt="mole" />
+      <img src={moleImage} alt="mole" className={styles[mole.size]} />
     </div>
   );
 }
