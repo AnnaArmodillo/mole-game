@@ -4,15 +4,35 @@
   position: relative;
 }
 
-.board {
+%board {
   height: 100%;
   width: 80%;
   background-image: url('../../images/grass.jpg');
   background-repeat: no-repeat;
   background-size: cover;
-  cursor: url('../../images/hammer.png'), pointer;
+}
+
+.glove {
+  @extend %board;
+  cursor: url('../../images/glove.png'), pointer;
   &:active {
-    cursor: url('../../images/hammer_click.png'), pointer;
+    cursor: url('../../images/glove_click.png'), pointer;
+  }
+}
+
+.bucket {
+  @extend %board;
+  cursor: url('../../images/bucket.png'), pointer;
+  &:active {
+    cursor: url('../../images/bucket_click.png'), pointer;
+  }
+}
+
+.shovel {
+  @extend %board;
+  cursor: url('../../images/shovel.png'), pointer;
+  &:active {
+    cursor: url('../../images/shovel_click.png'), pointer;
   }
 }
 

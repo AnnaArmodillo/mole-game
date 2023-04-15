@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import useSound from 'use-sound';
+import classNames from 'classnames';
 import styles from './game.module.scss';
 import { Mole } from '../Mole/Mole';
 import {
@@ -20,7 +21,7 @@ import {
   setMole,
 } from '../../redux/slices/moleSlice';
 import { ProgressBar } from '../ProgressBar/ProgressBas';
-import { MOLE_TIME } from '../constants';
+import { MOLE_TIME, WEAPONS } from '../constants';
 import { getPoints } from '../helper';
 import { Modal } from '../Modal/Modal';
 import glove from '../../sounds/glove_hit.mp3';
@@ -36,6 +37,7 @@ export function Game() {
   const [isModalFailOpen, setIsModalFailOpen] = useState(false);
   const [isModalSuccessOpen, setIsModalSuccessOpen] = useState(false);
   const sounds = [glove, bucket, shovel];
+  const weapon = WEAPONS[game.weapon];
   const [knock, { stop }] = useSound(sounds[game.weapon], { volume: 0.25 });
   const dispatch = useDispatch();
   function startLevel() {
@@ -99,7 +101,7 @@ export function Game() {
   }, [game.score]);
   return (
     <div className={styles.game}>
-      <div className={styles.board}>
+      <div className={classNames([styles.board], [styles[weapon]])}>
         <div className={styles.gameGrid}>
           <Mole clickMoleHandler={clickMoleHandler} />
         </div>
