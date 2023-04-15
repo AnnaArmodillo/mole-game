@@ -20,17 +20,37 @@ const gameSlice = createSlice({
     },
     setLevelUp(state, action) {
       return {
-        ...state, level: action.payload, score: 0, goal: LEVEL_GOAL[action.payload - 1],
+        ...state,
+        level: action.payload,
+        score: 0,
+        goal: LEVEL_GOAL[action.payload - 1],
       };
     },
     startNewGame() {
       return initState.game;
     },
+    setWeaponLevelUp(state, action) {
+      return {
+        ...state,
+        weapon: action.payload,
+        weaponPrice: 1500,
+      };
+    },
+    decreaseTotalScore(state, action) {
+      return { ...state, totalScore: action.payload };
+    },
   },
 });
 
 export const {
-  startGame, countPoints, finishGame, setTotalScore, setLevelUp, startNewGame,
+  startGame,
+  countPoints,
+  finishGame,
+  setTotalScore,
+  setLevelUp,
+  startNewGame,
+  setWeaponLevelUp,
+  decreaseTotalScore,
 } = gameSlice.actions;
 
 export const getGameSelector = (state) => state.game;

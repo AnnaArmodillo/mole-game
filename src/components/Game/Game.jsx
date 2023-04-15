@@ -4,9 +4,21 @@ import useSound from 'use-sound';
 import styles from './game.module.scss';
 import { Mole } from '../Mole/Mole';
 import {
-  countPoints, finishGame, getGameSelector, setLevelUp, setTotalScore, startGame, startNewGame,
+  countPoints,
+  decreaseTotalScore,
+  finishGame,
+  getGameSelector,
+  setLevelUp,
+  setTotalScore,
+  setWeaponLevelUp,
+  startGame,
+  startNewGame,
 } from '../../redux/slices/gameSlice';
-import { clearMole, getMoleSelector, setMole } from '../../redux/slices/moleSlice';
+import {
+  clearMole,
+  getMoleSelector,
+  setMole,
+} from '../../redux/slices/moleSlice';
 import { ProgressBar } from '../ProgressBar/ProgressBas';
 import { MOLE_TIME } from '../constants';
 import { getPoints } from '../helper';
@@ -42,13 +54,17 @@ export function Game() {
   }
   function clickMoleHandler() {
     knock();
-    setKnockCount((prev) => prev + 1);
+    setKnockCount((prev) => prev + game.weapon + 1);
   }
   function closeModalFailHandler() {
     setIsModalFailOpen(false);
   }
   function closeModalSuccessHandler() {
     setIsModalSuccessOpen(false);
+  }
+  function setWeaponLevelUpHandler() {
+    dispatch(setWeaponLevelUp(game.weapon + 1));
+    dispatch(decreaseTotalScore(game.totalScore - game.weaponPrice));
   }
   useEffect(() => {
     if (knockCount >= lives && game.started) {
@@ -98,8 +114,7 @@ export function Game() {
             Начать новую игру
           </button>
         )}
-        {game.started
-          && <ProgressBar timeLeft={timeLeft} />}
+        {game.started && <ProgressBar timeLeft={timeLeft} />}
         <div className={styles.wrapper}>
           <p>Счет</p>
           <p>{game.score}</p>
@@ -117,7 +132,10 @@ export function Game() {
           <p>{game.level}</p>
         </div>
       </div>
-      <Modal isModalOpen={isModalFailOpen} closeModalHandler={closeModalFailHandler}>
+      <Modal
+        isModalOpen={isModalFailOpen}
+        closeModalHandler={closeModalFailHandler}
+      >
         <p>О нет, кроты победили!</p>
         <p>
           Твой счет:
@@ -132,14 +150,17 @@ export function Game() {
           Начать игру заново
         </button>
       </Modal>
-      <Modal isModalOpen={isModalSuccessOpen} closeModalHandler={closeModalSuccessHandler}>
+      <Modal
+        isModalOpen={isModalSuccessOpen}
+        closeModalHandler={closeModalSuccessHandler}
+      >
         <p>Ты победил!</p>
         <p>
           Твой счет:
           {' '}
           {game.totalScore}
         </p>
-        {(game.level <= 10) && (
+        {game.level <= 10 && (
           <>
             <p>Но еще не все кроты повержены...</p>
             <button
@@ -152,6 +173,15 @@ export function Game() {
             >
               Следующий уровень
             </button>
+            {game.weapon < 2 && (game.totalScore >= game.weaponPrice) && (
+            <button
+              type="button"
+              onClick={setWeaponLevelUpHandler}
+              className={styles.button}
+            >
+              Купить оружие получше
+            </button>
+            )}
           </>
         )}
       </Modal>
