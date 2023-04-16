@@ -4,6 +4,8 @@ import useSound from 'use-sound';
 import classNames from 'classnames';
 import styles from './game.module.scss';
 import { Mole } from '../Mole/Mole';
+import moleJar from '../../images/mole_jar.png';
+import moleJarOutline from '../../images/mole_jar_outline.png';
 import {
   countPoints,
   decreaseTotalScore,
@@ -170,6 +172,23 @@ export function Game() {
           <p>Цель</p>
           <p>{game.goal}</p>
         </div>
+        <div className={styles.moleJarWrapper}>
+          <img
+            src={moleJar}
+            alt="кротовуха"
+            className={styles.moleJar}
+          />
+          <div
+            className={styles.container}
+            style={{ height: `calc(100% - ${Math.ceil((game.score * 100) / game.goal)}%)` }}
+          >
+            <img
+              src={moleJarOutline}
+              alt="кротовуха"
+              className={styles.moleJarOutline}
+            />
+          </div>
+        </div>
         {game.started && (
           <button
             type="button"
@@ -188,7 +207,6 @@ export function Game() {
         <p>О нет, кроты победили!</p>
         <p>
           Твой счет:
-          {' '}
           {game.totalScore}
         </p>
         <button
@@ -251,7 +269,6 @@ export function Game() {
         <p>Превосходно! Кроты побеждены!</p>
         <p>
           Твой счет:
-          {' '}
           {game.totalScore}
         </p>
         <button
