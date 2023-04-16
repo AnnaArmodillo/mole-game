@@ -30,6 +30,7 @@ import glove from '../../sounds/glove_hit.mp3';
 import bucket from '../../sounds/bucket_hit.mp3';
 import shovel from '../../sounds/shovel_hit.mp3';
 import { getSoundSelector } from '../../redux/slices/soundSlice';
+import { useDebounce } from '../../hooks/useDebounce';
 
 export function Game() {
   const game = useSelector(getGameSelector);
@@ -37,7 +38,9 @@ export function Game() {
   const { lives } = useSelector(getMoleSelector);
   const [knockCount, setKnockCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(MOLE_TIME);
+  const [timeNow, setTimeNow] = useState(Date.now());
   const [timeStart, setTimeStart] = useState('');
+  const [pauseTimeLeft, setPauseTimeLeft] = useState(0);
   const [isModalFailOpen, setIsModalFailOpen] = useState(false);
   const [isModalSuccessOpen, setIsModalSuccessOpen] = useState(false);
   const [isModalPauseOpen, setIsModalPauseOpen] = useState(false);
@@ -45,11 +48,14 @@ export function Game() {
   const weapon = WEAPONS[game.weapon];
   const [knock, { stop }] = useSound(sounds[game.weapon], { volume: sound ? 0.25 : 0 });
   const dispatch = useDispatch();
+  const debouncedTimeNow = useDebounce(Date.now(), 100);
   function pauseHandler() {
     dispatch(pauseGame());
+    setPauseTimeLeft(timeLeft);
     setIsModalPauseOpen(true);
   }
   function startLevel() {
+    setKnockCount(0);
     dispatch(startGame());
     dispatch(setMole());
     setTimeStart(Date.now());
@@ -73,7 +79,8 @@ export function Game() {
   }
   function closeModalPauseHandler() {
     dispatch(resumeGame());
-    setTimeStart(Date.now() + timeLeft - MOLE_TIME);
+    setTimeStart(timeNow - MOLE_TIME + pauseTimeLeft);
+    setTimeLeft(pauseTimeLeft);
     setIsModalPauseOpen(false);
   }
   function setWeaponLevelUpHandler() {
@@ -81,28 +88,30 @@ export function Game() {
     dispatch(decreaseTotalScore(game.totalScore - game.weaponPrice));
   }
   useEffect(() => {
+    setTimeNow(debouncedTimeNow);
+  }, [debouncedTimeNow]);
+  useEffect(() => {
+    setTimeLeft(timeStart - timeNow + MOLE_TIME);
+  }, [timeNow]);
+  useEffect(() => {
     if (knockCount >= lives && game.started) {
-      dispatch(setMole());
-      dispatch(countPoints(+getPoints(timeLeft, lives) + game.score));
-      dispatch(setTotalScore(+getPoints(timeLeft, lives) + game.totalScore));
       setTimeLeft(MOLE_TIME);
       setTimeStart(Date.now());
+      dispatch(setMole());
       setKnockCount(0);
+      dispatch(countPoints(+getPoints(timeLeft, lives) + game.score));
+      dispatch(setTotalScore(+getPoints(timeLeft, lives) + game.totalScore));
     }
   }, [knockCount]);
   useEffect(() => {
-    if (game.started && timeLeft >= 0) {
-      setTimeout(() => {
-        setTimeLeft(timeStart + MOLE_TIME - Date.now());
-      }, 100);
-    } else if (game.started) {
-      stop();
+    if (game.started && timeLeft <= 0) {
       dispatch(finishGame());
       dispatch(clearMole());
       dispatch(setTotalScore(game.totalScore + game.score));
       setIsModalFailOpen(true);
+      stop();
     }
-  }, [game.started, timeLeft, setTimeLeft, setIsModalFailOpen]);
+  }, [game.started, timeLeft]);
   useEffect(() => {
     if (game.score >= game.goal) {
       stop();

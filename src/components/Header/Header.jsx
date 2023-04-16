@@ -20,7 +20,7 @@ export function Header() {
           onClick={soundHandler}
           title="Выключить звук"
         >
-          <i className="fa-solid fa-volume-xmark" />
+          <i className="fa-solid fa-volume-high" />
         </button>
       ) : (
         <button
@@ -29,7 +29,7 @@ export function Header() {
           onClick={soundHandler}
           title="Включить звук"
         >
-          <i className="fa-solid fa-volume-high" />
+          <i className="fa-solid fa-volume-xmark" />
         </button>
       )}
       <Link

@@ -8,6 +8,8 @@ export function ProgressBar({ timeLeft }) {
   useEffect(() => {
     if (timeLeft <= 100) {
       setFillerHidden(true);
+    } else {
+      setFillerHidden(false);
     }
   }, [timeLeft]);
   return (
