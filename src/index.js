@@ -26,7 +26,7 @@ const router = createBrowserRouter(
       ],
     },
   ],
-  // { basename: '/mole-game' },
+  { basename: '/mole-game' },
 );
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
