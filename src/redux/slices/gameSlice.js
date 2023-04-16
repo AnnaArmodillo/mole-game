@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { initState } from '../initState';
-import { LEVEL_GOAL } from '../constants';
+import { LEVEL_GOAL, WEAPON_PRICES } from '../constants';
 
 const gameSlice = createSlice({
   name: 'game',
@@ -33,7 +33,7 @@ const gameSlice = createSlice({
       return {
         ...state,
         weapon: action.payload,
-        weaponPrice: 1500,
+        weaponPrice: WEAPON_PRICES[action.payload],
       };
     },
     decreaseTotalScore(state, action) {

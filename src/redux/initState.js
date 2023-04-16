@@ -1,3 +1,5 @@
+import { WEAPON_PRICES } from './constants';
+
 export const initState = {
   mole: {
     row: '',
@@ -12,7 +14,7 @@ export const initState = {
     totalScore: 0,
     goal: 200,
     weapon: 0,
-    weaponPrice: 500,
+    weaponPrice: WEAPON_PRICES[0],
   },
   sound: false,
 };

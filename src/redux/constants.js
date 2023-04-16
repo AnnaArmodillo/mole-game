@@ -1,1 +1,2 @@
 export const LEVEL_GOAL = [300, 500, 800, 1200, 1500, 1800, 2100, 2500, 2900, 3500];
+export const WEAPON_PRICES = [2000, 5000];

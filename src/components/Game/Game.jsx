@@ -42,11 +42,14 @@ export function Game() {
   const [timeStart, setTimeStart] = useState('');
   const [pauseTimeLeft, setPauseTimeLeft] = useState(0);
   const [isModalFailOpen, setIsModalFailOpen] = useState(false);
+  const [isModalWinOpen, setIsModalWinOpen] = useState(false);
   const [isModalSuccessOpen, setIsModalSuccessOpen] = useState(false);
   const [isModalPauseOpen, setIsModalPauseOpen] = useState(false);
   const sounds = [glove, bucket, shovel];
   const weapon = WEAPONS[game.weapon];
-  const [knock, { stop }] = useSound(sounds[game.weapon], { volume: sound ? 0.25 : 0 });
+  const [knock, { stop }] = useSound(sounds[game.weapon], {
+    volume: sound ? 0.25 : 0,
+  });
   const dispatch = useDispatch();
   const debouncedTimeNow = useDebounce(Date.now(), 100);
   function pauseHandler() {
@@ -54,11 +57,16 @@ export function Game() {
     setPauseTimeLeft(timeLeft);
     setIsModalPauseOpen(true);
   }
+  function setNewMole() {
+    setTimeLeft(MOLE_TIME);
+    setTimeStart(timeNow);
+    dispatch(setMole());
+  }
   function startLevel() {
     setKnockCount(0);
     dispatch(startGame());
     dispatch(setMole());
-    setTimeStart(Date.now());
+    setTimeStart(timeNow);
     setTimeLeft(MOLE_TIME);
   }
   function startNewGameHandler() {
@@ -72,6 +80,11 @@ export function Game() {
   }
   function closeModalFailHandler() {
     setIsModalFailOpen(false);
+  }
+  function closeModalWinHandler() {
+    dispatch(finishGame());
+    dispatch(clearMole());
+    setIsModalWinOpen(false);
   }
   function closeModalSuccessHandler() {
     startLevel();
@@ -87,41 +100,50 @@ export function Game() {
     dispatch(setWeaponLevelUp(game.weapon + 1));
     dispatch(decreaseTotalScore(game.totalScore - game.weaponPrice));
   }
+  function updateScore() {
+    dispatch(countPoints(+getPoints(timeLeft, lives) + game.score));
+    dispatch(setTotalScore(+getPoints(timeLeft, lives) + game.totalScore));
+  }
   useEffect(() => {
     setTimeNow(debouncedTimeNow);
   }, [debouncedTimeNow]);
   useEffect(() => {
     setTimeLeft(timeStart - timeNow + MOLE_TIME);
-  }, [timeNow]);
+  }, [timeNow, timeStart, MOLE_TIME]);
   useEffect(() => {
     if (knockCount >= lives && game.started) {
-      setTimeLeft(MOLE_TIME);
-      setTimeStart(Date.now());
-      dispatch(setMole());
       setKnockCount(0);
-      dispatch(countPoints(+getPoints(timeLeft, lives) + game.score));
-      dispatch(setTotalScore(+getPoints(timeLeft, lives) + game.totalScore));
+      setNewMole();
+      updateScore();
     }
-  }, [knockCount]);
+  }, [knockCount, game.started]);
   useEffect(() => {
     if (game.started && timeLeft <= 0) {
       dispatch(finishGame());
       dispatch(clearMole());
-      dispatch(setTotalScore(game.totalScore + game.score));
       setIsModalFailOpen(true);
       stop();
     }
-  }, [game.started, timeLeft]);
+  }, [game.started, timeLeft, finishGame, clearMole, setIsModalFailOpen, stop]);
   useEffect(() => {
     if (game.score >= game.goal) {
       stop();
       if (game.level < 10) {
         dispatch(setLevelUp(game.level + 1));
+        setIsModalSuccessOpen(true);
+      } else {
+        setIsModalWinOpen(true);
       }
       dispatch(finishGame());
-      setIsModalSuccessOpen(true);
     }
-  }, [game.score]);
+  }, [
+    game.score,
+    game.goal,
+    game.level,
+    setLevelUp,
+    setIsModalSuccessOpen,
+    finishGame,
+  ]);
   return (
     <div className={styles.game}>
       <div className={classNames([styles.board], [styles[weapon]])}>
@@ -197,14 +219,14 @@ export function Game() {
             >
               Следующий уровень
             </button>
-            {game.weapon < 2 && (game.totalScore >= game.weaponPrice) && (
-            <button
-              type="button"
-              onClick={setWeaponLevelUpHandler}
-              className={styles.button}
-            >
-              Купить оружие получше
-            </button>
+            {game.weapon < 2 && game.totalScore >= game.weaponPrice && (
+              <button
+                type="button"
+                onClick={setWeaponLevelUpHandler}
+                className={styles.button}
+              >
+                Купить оружие получше
+              </button>
             )}
           </>
         )}
@@ -213,15 +235,34 @@ export function Game() {
         isModalOpen={isModalPauseOpen}
         closeModalHandler={closeModalPauseHandler}
       >
-        <p>
-          Перерыв! Нажми продолжить, когда немного отдохнешь
-        </p>
+        <p>Перерыв! Нажми продолжить, когда немного отдохнешь</p>
         <button
           type="button"
           className={styles.button}
           onClick={closeModalPauseHandler}
         >
           Продолжить
+        </button>
+      </Modal>
+      <Modal
+        isModalOpen={isModalWinOpen}
+        closeModalHandler={closeModalWinHandler}
+      >
+        <p>Превосходно! Кроты побеждены!</p>
+        <p>
+          Твой счет:
+          {' '}
+          {game.totalScore}
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            closeModalWinHandler();
+            startNewGameHandler();
+          }}
+          className={styles.button}
+        >
+          Начать игру заново
         </button>
       </Modal>
     </div>
